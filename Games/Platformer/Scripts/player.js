@@ -9,12 +9,18 @@ player.y = null;
 player.width = 32;                  
 player.height = 32;                 
 player.image = new Image();
-player.image.src = "";
+player.image.src = "Assets/right0.png";
 player.health = 100;
 player.speed = 4;
 player.velX = 0;                    
 player.velY = 0;                    
 player.isJumping = false;   
+player.poses = {};
+player.poses['right'] = new Animation(['Assets/right0.png', 'Assets/right1.png']);
+player.poses['left'] = new Animation(['Assets/left0.png', 'Assets/left1.png']);
+player.currentPose = 'right';
+
+
 
 
 player.draw = function()
@@ -32,18 +38,27 @@ player.isTouching = function( gameObject )
 
 player.move = function(x, y)
 {
+    if (input.keysDown.size > 0)
+    {
+        var sprite = player.poses[player.currentPose];
+        player.image = sprite.getImage();
+    }
     /*Left/Right Movement*/
 
     // player holding left
     if (input.keysDown.has(37) && player.velX > -player.speed) 
     { 
-        player.velX--; 
+        player.velX--;
+        player.currentPose = 'left'
     }
     // player holding right
     if (input.keysDown.has(39) && player.velX < player.speed) 
     { 
         player.velX++;
+        player.currentPose = 'right'
+        
     }
+    
     player.velX *= friction;
 
     /*Jumping*/
